@@ -185,6 +185,31 @@
   .btn-row button:hover{background:rgba(255,255,255,.18)}
   .btn-row button.wide{flex:1 1 100%}
   #evToggle.on .led,#evOnly.on .led{background:#ffd66e;box-shadow:0 0 8px #ffd66e}
+
+  .acc{border-bottom:1px solid rgba(255,255,255,.07)}
+  .acc:last-of-type{border-bottom:none}
+  .acc-head{display:flex;align-items:center;gap:9px;padding:9px 2px;cursor:pointer;user-select:none}
+  .acc-head:hover .acc-name{color:#fff}
+  .acc-arrow{width:9px;height:9px;flex:0 0 auto;position:relative}
+  .acc-arrow:before{content:"";position:absolute;left:1px;top:1px;width:5px;height:5px;
+    border-right:1.6px solid #7f8fa8;border-bottom:1.6px solid #7f8fa8;
+    transform:rotate(-45deg);transition:transform .18s}
+  .acc.open .acc-arrow:before{transform:rotate(45deg);border-color:#cfe2ff}
+  .acc-name{flex:1;font-size:12.5px;font-weight:600;color:#d5e0f0;transition:color .15s}
+  .acc.open .acc-name{color:#fff}
+  .acc-count{font-size:10px;color:#6f7f97;font-variant-numeric:tabular-nums}
+  .acc-body{display:none;padding:2px 0 12px 18px}
+  .acc.open .acc-body{display:block;animation:accIn .18s ease}
+  @keyframes accIn{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+  .acc-body .toggle{margin-bottom:5px}
+
+  .sw{width:30px;height:16px;border-radius:9px;flex:0 0 auto;cursor:pointer;position:relative;
+    background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.14);transition:background .16s}
+  .sw:before{content:"";position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;
+    background:#8b98ab;transition:transform .16s,background .16s}
+  .sw.on{background:rgba(92,224,138,.28);border-color:rgba(92,224,138,.5)}
+  .sw.on:before{transform:translateX(14px);background:#5ce08a}
+  .sw:hover{border-color:rgba(255,255,255,.35)}
   #bubbleToggle.on .led{background:#bde9ff;box-shadow:0 0 9px #bde9ff}
 
   #newsOverlay{position:fixed;top:0;right:0;bottom:0;left:0;inset:0;z-index:60;display:none;
@@ -244,10 +269,15 @@
     <select id="resourceFilter"></select>
   </div>
   
+  <div class="acc" data-acc="view">
+    <div class="acc-head"><span class="acc-arrow"></span><span class="acc-name" id="ui-viewhead">Globe</span></div>
+    <div class="acc-body">
   <div class="toggle on" data-key="borders"><span id="ui-borders">Country borders</span><span class="led"></span></div>
   <div class="toggle" data-key="graticule"><span id="ui-grid">Lat/long grid</span><span class="led"></span></div>
   <div class="toggle" data-key="night"><span id="ui-night">Day/night terminator</span><span class="led"></span></div>
   <div class="toggle on" data-key="rotate"><span id="ui-rotate">Auto-rotate</span><span class="led"></span></div>
+    </div>
+  </div>
   <div id="layerPanel"></div>
   <div id="siteCount"></div>
   <div class="credit" id="ui-credit">Data: Natural Earth borders · UN / World Bank stats · OEC (approx. 2023)</div>
@@ -800,6 +830,7 @@ function tick(t){
   requestAnimationFrame(tick);
 }
 
+const BUILD_ID = "wirtschaft";
 /* ==========================================================================
    HAUPTSTÄDTE  ·  Quelle GeoNames (cities15000, Merkmal PPLC), Stand 2026
    Koordinaten und Einwohnerzahlen der Kernstadt, nicht der Metropolregion.
@@ -1995,11 +2026,13 @@ ZMB:["ZM","Sambia","Zambia"], ZWE:["ZW","Simbabwe","Zimbabwe"]
 i18n.en.ui = {legend:"Legend", lvl:"Level", status:"Status", operator:"Operator",
   planned:"Planned capacity", hint:"Click for details", links:"Connections",
   linkPanel:"Supply chains", linkShow:"Show flows", linkAll:"All flows",
+  viewPanel:"Globe", newsPanel:"News", toolPanel:"Tools",
   dataPanel:"News & data", evShow:"Show events", evOnly:"Only sites with events",
   events:"Events", window:"Time window", days7:"last 7 days", days30:"last 30 days",
   days90:"last 90 days", days365:"last year", daysAll:"all", search:"Name or lat, lon",
   copyHint:"click to copy", demo:"Load sample events", clear:"Clear", noEvents:"no events loaded",
-  loaded:"events loaded", bubbles:"Show news bubbles", bubbleLayer:"Bubbles for",
+  loaded:"events loaded", reset:"Reset", savedOn:"Settings are saved on this device",
+  savedOff:"Settings only last for this session here", bubbles:"Show news bubbles", bubbleLayer:"Bubbles for",
   allLayers:"all layers", dcNews:"Load data centre news", readMore:"Read the article",
   showOnMap:"Show on the globe", popHint:"click to pop",
   apiHint:"Console: EarthTwin.near(lat, lon, km) · .match(text, lat, lon) · .setEvents([...]) · .flyTo(id)",
@@ -2007,11 +2040,13 @@ i18n.en.ui = {legend:"Legend", lvl:"Level", status:"Status", operator:"Operator"
 i18n.de.ui = {legend:"Legende", lvl:"Level", status:"Status", operator:"Betreiber",
   planned:"Geplante Kapazität", hint:"Für Details anklicken", links:"Verbindungen",
   linkPanel:"Lieferketten", linkShow:"Ströme anzeigen", linkAll:"Alle Ströme",
+  viewPanel:"Darstellung", newsPanel:"Meldungen", toolPanel:"Werkzeuge",
   dataPanel:"Nachrichten & Daten", evShow:"Ereignisse anzeigen", evOnly:"Nur Standorte mit Ereignissen",
   events:"Ereignisse", window:"Zeitfenster", days7:"letzte 7 Tage", days30:"letzte 30 Tage",
   days90:"letzte 90 Tage", days365:"letztes Jahr", daysAll:"alle", search:"Name oder Breite, Länge",
   copyHint:"klicken zum Kopieren", demo:"Beispieldaten laden", clear:"Leeren", noEvents:"keine Ereignisse geladen",
-  loaded:"Ereignisse geladen", bubbles:"Meldungen als Blasen", bubbleLayer:"Blasen für",
+  loaded:"Ereignisse geladen", reset:"Zurücksetzen", savedOn:"Einstellungen werden auf diesem Gerät gespeichert",
+  savedOff:"Einstellungen gelten hier nur für diese Sitzung", bubbles:"Meldungen als Blasen", bubbleLayer:"Blasen für",
   allLayers:"alle Ebenen", dcNews:"Rechenzentrums-Meldungen laden", readMore:"Zum Artikel",
   showOnMap:"Auf dem Globus zeigen", popHint:"anklicken zum Platzen",
   apiHint:"Konsole: EarthTwin.near(Breite, Länge, km) · .match(text, lat, lon) · .setEvents([...]) · .flyTo(id)",
@@ -2490,25 +2525,43 @@ function iconCanvas(sh, col){
   shapeDetail(c, sh, 9, 9, 6.6);
   return cv;
 }
+const uiCfg = {open:""};
+
+function accBlock(key, title, count, body, sw){
+  return `<div class="acc${uiCfg.open === key ? " open" : ""}" data-acc="${key}">
+      <div class="acc-head">
+        <span class="acc-arrow"></span>
+        <span class="acc-name">${title}</span>
+        ${count != null ? `<span class="acc-count">${count}</span>` : ""}
+        ${sw || ""}
+      </div>
+      <div class="acc-body">${body}</div>
+    </div>`;
+}
 function buildPanel(){
   const box = document.getElementById("layerPanel");
+  const hasNews = typeof bubbleCfg !== "undefined";
   let html = "";
+
   for (const k of LAYER_KEYS){
     const lay = LAYERS[k], w = i18n[currentLang][lay.words];
-    html += `<div class="mine-block">
-      <div class="mb-head">${w.panel}</div>
-      <div class="mtoggle${lay.cfg.show?" on":""}" data-layer="${k}" data-mkey="show"><span>${w.show}</span><span class="led"></span></div>
-      ${lay.big?`<div class="mtoggle${lay.cfg.allLv?" on":""}" data-layer="${k}" data-mkey="allLv"><span>${w.allLv}</span><span class="led"></span></div>`:""}
-      <select id="${lay.sel}"></select>
-      <div class="legend-head" data-legend="${lay.leg}"><span>${UI().legend}</span></div>
-      <div id="${lay.leg}"></div>
-    </div>`;
+    const sw = `<span class="sw${lay.cfg.show?" on":""}" data-layer="${k}" data-mkey="show" title="${w.show}"></span>`;
+    const body =
+      `<select id="${lay.sel}"></select>` +
+      (lay.big ? `<div class="mtoggle${lay.cfg.allLv?" on":""}" data-layer="${k}" data-mkey="allLv"><span>${w.allLv}</span><span class="led"></span></div>` : "") +
+      `<div id="${lay.leg}"></div>`;
+    html += accBlock(k, w.panel, lay.arr.length, body, sw);
   }
-  html += `<div class="mine-block">
-      <div class="mb-head">${UI().dataPanel}</div>
-      <input id="geoSearch" placeholder="${UI().search}" autocomplete="off">
-      <div class="mtoggle${eventCfg.show?" on":""}" id="evToggle"><span>${UI().evShow}</span><span class="led"></span></div>
-      <div class="mtoggle${eventCfg.only?" on":""}" id="evOnly"><span>${UI().evOnly}</span><span class="led"></span></div>
+
+  if (LIVE_LINKS.length){
+    const sw = `<span class="sw${linkCfg.show?" on":""}" id="linkSwitch" title="${UI().linkShow}"></span>`;
+    html += accBlock("lk", UI().linkPanel, LIVE_LINKS.length, `<select id="linkFilter"></select>`, sw);
+  }
+
+  if (hasNews){
+    const sw = `<span class="sw${bubbleCfg.show?" on":""}" id="bubbleSwitch" title="${UI().bubbles}"></span>`;
+    const body = `
+      <select id="bubbleLayer"></select>
       <select id="evWindow">
         <option value="7">${UI().days7}</option>
         <option value="30">${UI().days30}</option>
@@ -2516,65 +2569,84 @@ function buildPanel(){
         <option value="365">${UI().days365}</option>
         <option value="0">${UI().daysAll}</option>
       </select>
-      ${typeof bubbleCfg !== "undefined" ? `
-      <div class="mtoggle${bubbleCfg.show?" on":""}" id="bubbleToggle"><span>${UI().bubbles}</span><span class="led"></span></div>
-      <select id="bubbleLayer"></select>
+      <div class="mtoggle${eventCfg.only?" on":""}" id="evOnly"><span>${UI().evOnly}</span><span class="led"></span></div>
+      <div class="mtoggle${eventCfg.show?" on":""}" id="evToggle"><span>${UI().evShow}</span><span class="led"></span></div>
       <div class="btn-row">
         <button id="evDc" class="wide">${UI().dcNews}</button>
-      </div>` : ""}
+      </div>
       <div class="btn-row">
         <button id="evDemo">${UI().demo}</button>
         <button id="evClear">${UI().clear}</button>
       </div>
+      <div id="evCount" class="lg-foot"></div>`;
+    html += accBlock("ev", UI().newsPanel, null, body, sw);
+  }
+
+  html += accBlock("tools", UI().toolPanel, null, `
+      <input id="geoSearch" placeholder="${UI().search}" autocomplete="off">
       <div class="btn-row">
         <button id="dlJson">JSON</button>
         <button id="dlCsv">CSV</button>
+        <button id="cfgReset">${UI().reset}</button>
       </div>
-      <div id="evCount" class="lg-foot"></div>
+      <div id="saveState" class="lg-foot"></div>
       <div class="lg-foot">${UI().apiHint}</div>
-    </div>`;
-  html += LIVE_LINKS.length ? `<div class="mine-block">
-      <div class="mb-head">${UI().linkPanel}</div>
-      <div class="mtoggle${linkCfg.show?" on":""}" id="linkToggle"><span>${UI().linkShow}</span><span class="led"></span></div>
-      <select id="linkFilter"></select>
-      <div class="lg-foot">${UI().src}</div>
-    </div>` : `<div class="mine-block"><div class="lg-foot">${UI().src}</div></div>`;
+      <div class="lg-foot">${UI().src}</div>`);
+
   box.innerHTML = html;
 
   box.querySelectorAll(".mtoggle[data-layer]").forEach(el => el.addEventListener("click", () => {
     const lay = LAYERS[el.dataset.layer], key = el.dataset.mkey;
     lay.cfg[key] = !lay.cfg[key];
     el.classList.toggle("on", lay.cfg[key]);
-    if (key === "show" && !lay.cfg.show){
-      if (selectedSite && selectedSite.k === el.dataset.layer){
-        selectedSite = null; document.getElementById("dossier").style.display = "none";
-      }
-      hoveredSite = null;
-    }
     render();
-  }));
-  box.querySelectorAll(".legend-head").forEach(h => h.addEventListener("click", () => {
-    document.getElementById(h.dataset.legend).classList.toggle("open");
-    h.classList.toggle("open");
   }));
   for (const k of LAYER_KEYS){
     document.getElementById(LAYERS[k].sel).addEventListener("change", e => {
       LAYERS[k].cfg.filter = e.target.value; markLegend(); render();
     });
   }
-  const lt = document.getElementById("linkToggle");
-  if (lt) lt.addEventListener("click", e => {
-    linkCfg.show = !linkCfg.show;
-    e.currentTarget.classList.toggle("on", linkCfg.show);
-    render();
-  });
   const lf = document.getElementById("linkFilter");
-  if (lf) lf.addEventListener("change", e => {
-    linkCfg.filter = e.target.value; render();
-  });
+  if (lf) lf.addEventListener("change", e => { linkCfg.filter = e.target.value; render(); });
+
   if (typeof wireDataPanel === "function") wireDataPanel();
   if (typeof wireBubbles === "function") wireBubbles();
+  if (typeof wireSettings === "function") wireSettings();
 }
+
+/* Ein einziger Zuhörer für alle Abschnitte und Schalter, überlebt jeden Neuaufbau */
+function setLayerShow(k, on){
+  if (k === "lk"){ linkCfg.show = on; }
+  else if (k === "bub"){ bubbleCfg.show = on; if (!on && typeof bubbleState !== "undefined") bubbleState.clear(); }
+  else {
+    LAYERS[k].cfg.show = on;
+    if (!on){
+      if (selectedSite && selectedSite.k === k){
+        selectedSite = null; document.getElementById("dossier").style.display = "none";
+      }
+      hoveredSite = null;
+    }
+  }
+  render();
+}
+document.addEventListener("click", e => {
+  const sw = e.target.closest && e.target.closest(".sw");
+  if (sw){
+    e.stopPropagation();
+    const on = !sw.classList.contains("on");
+    sw.classList.toggle("on", on);
+    setLayerShow(sw.id === "linkSwitch" ? "lk" : sw.id === "bubbleSwitch" ? "bub" : sw.dataset.layer, on);
+    return;
+  }
+  const head = e.target.closest && e.target.closest(".acc-head");
+  if (!head) return;
+  const acc = head.parentElement, key = acc.dataset.acc;
+  const wasOpen = acc.classList.contains("open");
+  document.querySelectorAll(".acc.open").forEach(a => a.classList.remove("open"));
+  if (!wasOpen){ acc.classList.add("open"); uiCfg.open = key; }
+  else uiCfg.open = "";
+});
+
 function buildFilter(k){
   const lay = LAYERS[k], sel = document.getElementById(lay.sel);
   const counts = {};
@@ -2597,6 +2669,7 @@ function buildLinkFilter(){
 }
 function buildLegend(k){
   const lay = LAYERS[k], box = document.getElementById(lay.leg);
+  if (!box) return;
   const counts = {};
   for (const s of lay.arr) counts[s.t] = (counts[s.t]||0) + 1;
   box.innerHTML = `<div class="lg-grid"></div>`;
@@ -2635,6 +2708,8 @@ function updateSiteCount(){
     .map(k => `${i18n[currentLang][LAYERS[k].words].panel} ${c[k]}`).join(" · ") || "–";
 }
 function updateSiteUI(){
+  const vh = document.getElementById("ui-viewhead");
+  if (vh) vh.textContent = UI().viewPanel;
   buildPanel();
   for (const k of LAYER_KEYS){ buildFilter(k); buildLegend(k); }
   buildLinkFilter();
@@ -2927,8 +3002,143 @@ function wireDataPanel(){
   updateEventCount();
 }
 
+/* ==========================================================================
+   EINSTELLUNGEN MERKEN
+   Alles was du an- oder ausschaltest wird lokal gespeichert und beim
+   nächsten Öffnen wiederhergestellt: Ebenen, Filter, Zeitfenster, Sprache,
+   Gitter und Nachtgrenze, dazu die zuletzt betrachtete Stelle des Globus.
+   ========================================================================== */
+
+const STORE_KEY = "earthTwin." + (typeof BUILD_ID !== "undefined" ? BUILD_ID : "default") + ".v1";
+let storeOk = true, memStore = null;
+
+function storeRead(){
+  try {
+    const raw = window.localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e){
+    storeOk = false;
+    try { return memStore ? JSON.parse(memStore) : null; } catch(e2){ return null; }
+  }
+}
+function storeWrite(obj){
+  const raw = JSON.stringify(obj);
+  memStore = raw;
+  try { window.localStorage.setItem(STORE_KEY, raw); }
+  catch(e){ storeOk = false; }
+}
+function storeClear(){
+  memStore = null;
+  try { window.localStorage.removeItem(STORE_KEY); } catch(e){}
+}
+
+/* ---------- Zustand einsammeln ---------- */
+function snapshot(){
+  const o = {v:1, lang:currentLang, state:{}, layers:{}};
+  for (const k of ["borders","graticule","night","rotate"]) o.state[k] = state[k];
+  for (const k of LAYER_KEYS){
+    const c = LAYERS[k].cfg;
+    o.layers[k] = {show:c.show, allLv:c.allLv, filter:c.filter};
+  }
+  o.link = {show:linkCfg.show, filter:linkCfg.filter};
+  o.ev = {show:eventCfg.show, only:eventCfg.only, days:eventCfg.days};
+  if (typeof bubbleCfg !== "undefined") o.bub = {show:bubbleCfg.show, layer:bubbleCfg.layer};
+  o.open = uiCfg.open;
+  return o;
+}
+function currentView(){
+  return {rot:[+rotation[0].toFixed(2), +rotation[1].toFixed(2)], z:+zoomF().toFixed(3)};
+}
+
+/* ---------- Zustand anwenden ---------- */
+let startLang = "en", pendingZoom = null;
+(function applySaved(){
+  const s = storeRead();
+  if (!s || s.v !== 1) return;
+  if (s.lang === "de" || s.lang === "en") startLang = s.lang;
+  if (s.state) for (const k in s.state) if (k in state) state[k] = !!s.state[k];
+  if (s.layers) for (const k of LAYER_KEYS){
+    const c = s.layers[k]; if (!c) continue;
+    LAYERS[k].cfg.show   = !!c.show;
+    LAYERS[k].cfg.allLv  = !!c.allLv;
+    LAYERS[k].cfg.filter = LAYERS[k].meta[c.filter] ? c.filter : "";
+  }
+  if (s.link){ linkCfg.show = !!s.link.show; linkCfg.filter = LINK_META[s.link.filter] ? s.link.filter : ""; }
+  if (s.ev){ eventCfg.show = !!s.ev.show; eventCfg.only = !!s.ev.only;
+             if (typeof s.ev.days === "number") eventCfg.days = s.ev.days; }
+  if (s.bub && typeof bubbleCfg !== "undefined"){
+    bubbleCfg.show = !!s.bub.show;
+    bubbleCfg.layer = (s.bub.layer === "" || LAYERS[s.bub.layer]) ? s.bub.layer : "d";
+  }
+  if (typeof s.open === "string") uiCfg.open = s.open;
+  if (s.view){
+    if (Array.isArray(s.view.rot)){ rotation[0] = s.view.rot[0]; rotation[1] = s.view.rot[1]; }
+    if (typeof s.view.z === "number") pendingZoom = s.view.z;
+  }
+})();
+
+/* Kopfzeilen-Schalter optisch nachziehen */
+function syncHeadToggles(){
+  document.querySelectorAll(".toggle[data-key]").forEach(el => {
+    el.classList.toggle("on", !!state[el.dataset.key]);
+  });
+}
+
+/* ---------- Automatisch sichern ---------- */
+let lastSaved = "", viewDirty = false;
+function saveNow(){
+  const snap = snapshot();
+  snap.view = currentView();
+  storeWrite(snap);
+  lastSaved = JSON.stringify(snapshot());
+  viewDirty = false;
+  const el = document.getElementById("saveState");
+  if (el) el.textContent = storeOk ? UI().savedOn : UI().savedOff;
+}
+setInterval(() => {
+  const now = JSON.stringify(snapshot());
+  if (now !== lastSaved || viewDirty) saveNow();
+}, 1200);
+
+globeCv.addEventListener("pointerup", () => { viewDirty = true; });
+globeCv.addEventListener("wheel", () => { viewDirty = true; }, {passive:true});
+
+/* ---------- Bedienelement ---------- */
+function wireSettings(){
+  const el = document.getElementById("saveState");
+  if (el) el.textContent = storeOk ? UI().savedOn : UI().savedOff;
+  const btn = document.getElementById("cfgReset");
+  if (btn) btn.addEventListener("click", () => {
+    storeClear();
+    for (const k of LAYER_KEYS){
+      LAYERS[k].cfg.show = true;
+      LAYERS[k].cfg.allLv = (k === "h");
+      LAYERS[k].cfg.filter = "";
+    }
+    linkCfg.show = true; linkCfg.filter = "";
+    eventCfg.show = true; eventCfg.only = false; eventCfg.days = 90;
+    if (typeof bubbleCfg !== "undefined"){ bubbleCfg.show = true; bubbleCfg.layer = "d"; }
+    state.borders = true; state.graticule = false; state.night = false; state.rotate = true;
+    uiCfg.open = "";
+    syncHeadToggles();
+    lastSaved = "";
+    updateSiteUI(); render();
+  });
+}
+
+/* Sprache aus dem Speicher übernehmen und Schalter nachziehen */
+requestAnimationFrame(() => {
+  syncHeadToggles();
+  if (pendingZoom){
+    scale = Math.max(120, Math.min(Math.min(W,H)*3.2, (Math.min(W,H)/2.25) * pendingZoom));
+    needsPick = true;
+  }
+  render();
+  lastSaved = JSON.stringify(snapshot());
+});
+
 window.addEventListener("resize", resize);
-setLang('en'); // Setzt Englisch als Standard-Sprache beim Start
+setLang(typeof startLang !== 'undefined' ? startLang : 'en'); // Setzt Englisch als Standard-Sprache beim Start
 resize();
 requestAnimationFrame(tick);
 </script>
