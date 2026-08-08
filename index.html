@@ -151,6 +151,34 @@
   .mtoggle[data-layer="e"].on .led{background:#ffd84a;box-shadow:0 0 8px #ffd84a}
   .mtoggle[data-layer="h"].on .led{background:#e8c07a;box-shadow:0 0 8px #e8c07a}
   .mtoggle[data-layer="c"].on .led{background:#ffe1a8;box-shadow:0 0 8px #ffe1a8}
+
+  #panelBtn{display:none;position:fixed;left:12px;top:12px;z-index:45;width:44px;height:44px;
+    border-radius:12px;background:var(--panel);border:1px solid var(--panel-border);
+    backdrop-filter:blur(8px);cursor:pointer;padding:0;
+    flex-direction:column;align-items:center;justify-content:center;gap:4px}
+  #panelBtn span{display:block;width:18px;height:2px;border-radius:1px;background:#dbe6f5;
+    transition:transform .22s,opacity .22s}
+  #panelBtn.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  #panelBtn.open span:nth-child(2){opacity:0}
+  #panelBtn.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  #panelScrim{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(2,6,14,.55);
+    opacity:0;pointer-events:none;transition:opacity .25s;z-index:35}
+
+  @media (max-width:720px){
+    #panelBtn{display:flex}
+    #panelScrim{display:block}
+    body.panel-open #panelScrim{opacity:1;pointer-events:auto}
+    .panel{position:fixed;left:0;top:0;bottom:0;width:min(88vw,340px);max-width:none;
+      max-height:none;border-radius:0 16px 16px 0;padding-top:64px;
+      transform:translateX(-102%);transition:transform .26s ease;z-index:40}
+    body.panel-open .panel{transform:none}
+    #dossier{width:calc(100% - 24px);max-height:72vh}
+    .no-card{max-height:80vh}
+    #newsOverlay{padding:14px}
+  }
+  @media (max-width:720px) and (orientation:landscape){
+    .panel{width:min(70vw,320px)}
+  }
   #linkToggle.on .led{background:#ff9d4a;box-shadow:0 0 8px #ff9d4a}
   .lg-item canvas{flex:0 0 auto}
   #layerPanel select{width:100%;background-color:rgba(20,30,45,.9);border:1px solid rgba(255,255,255,.2);
@@ -252,6 +280,8 @@
 <canvas id="stars"></canvas>
 <canvas id="globe"></canvas>
 
+<div id="panelScrim"></div>
+<button id="panelBtn" aria-label="Menu"><span></span><span></span><span></span></button>
 <div class="panel">
   <div class="panel-header">
     <h1><span class="dot"></span><span id="ui-title">Earth Digital Twin</span></h1>
@@ -275,8 +305,8 @@
   <div class="toggle on" data-key="borders"><span id="ui-borders">Country borders</span><span class="led"></span></div>
   <div class="toggle" data-key="graticule"><span id="ui-grid">Lat/long grid</span><span class="led"></span></div>
   <div class="toggle" data-key="night"><span id="ui-night">Day/night terminator</span><span class="led"></span></div>
-  <div class="toggle on" data-key="rotate"><span id="ui-rotate">Auto-rotate</span><span class="led"></span></div>
-  <div class="toggle on" data-key="relief"><span id="ui-relief">Terrain relief</span><span class="led"></span></div>
+  <div class="toggle" data-key="rotate"><span id="ui-rotate">Auto-rotate</span><span class="led"></span></div>
+  <div class="toggle" data-key="relief"><span id="ui-relief">Terrain relief</span><span class="led"></span></div>
     </div>
   </div>
   <div id="layerPanel"></div>
@@ -577,7 +607,7 @@ const ctx = globeCv.getContext("2d");
 const pickCv = document.createElement("canvas");
 const pctx = pickCv.getContext("2d", {willReadFrequently:true});
 
-const state = { borders:true, graticule:false, night:false, rotate:true, relief:true };
+const state = { borders:true, graticule:false, night:false, rotate:false, relief:false };
 let W, H, DPR, scale, rotation = [-95, -22], hovered = -1, dragging = false, lastPointer = null, needsPick = true;
 
 const topo = Datamap.prototype.worldTopo;
@@ -2494,10 +2524,15 @@ function siteOut(s){
   return u ? v + " " + u : v;
 }
 function zoomF(){ return scale / (Math.min(W,H)/2.25); }
+/* Auf kleinen Schirmen ist die Kugel klein, die Symbole dürfen dann nicht
+   in voller Größe stehen bleiben, sonst überdecken sie den halben Globus. */
+function screenF(){ return Math.min(1, Math.max(0.52, Math.min(W,H)/900)); }
 function minLevel(cfg){
   if (cfg.allLv) return 1;
   const z = zoomF();
-  return z < 0.9 ? 5 : z < 1.25 ? 4 : z < 1.8 ? 3 : z < 2.5 ? 2 : 1;
+  const base = z < 0.9 ? 5 : z < 1.25 ? 4 : z < 1.8 ? 3 : z < 2.5 ? 2 : 1;
+  /* kleiner Schirm: eine Stufe strenger, sonst klebt alles aufeinander */
+  return Math.min(5, base + (Math.min(W,H) < 560 ? 1 : 0));
 }
 function onFront(lon, lat){
   return d3.geo.distance([lon, lat], [-rotation[0], -rotation[1]]) < Math.PI/2 - 0.02;
@@ -2507,6 +2542,10 @@ function onFront(lon, lat){
 function drawLinks(){
   if (!linkCfg.show) return;
   const z = zoomF();
+  /* Beim Drehen und Ziehen reichen wenige Stützpunkte je Bogen. Das spart
+     bei 80 Linien rund zwei Drittel der Projektionsrechnungen pro Bild. */
+  const moving = dragging || (state.rotate && hovered < 0 && !hoveredSite && !selectedSite);
+  const SEG = moving ? 12 : 32;
   for (const lk of LIVE_LINKS){
     if (linkCfg.filter && lk.t !== linkCfg.filter) continue;
     const a = lk._a, b = lk._b;
@@ -2514,7 +2553,7 @@ function drawLinks(){
     const hi = (selectedSite === a || selectedSite === b || hoveredSite === a || hoveredSite === b);
     const interp = d3.geo.interpolate([a.lo,a.la], [b.lo,b.la]);
     const pts = [];
-    for (let i=0;i<=32;i++) pts.push(interp(i/32));
+    for (let i=0;i<=SEG;i++) pts.push(interp(i/SEG));
     const col = LINK_META[lk.t].col;
     ctx.save();
     ctx.beginPath(); path({type:"LineString", coordinates:pts});
@@ -2554,7 +2593,8 @@ function drawSites(){
       if (!onFront(s.lo, s.la)) continue;
       const p = projection([s.lo, s.la]);
       if (!p || p[0] < -50 || p[0] > W+50 || p[1] < -50 || p[1] > H+50) continue;
-      list.push({s, x:p[0], y:p[1], r:(3.4 + s.lv*1.45) * Math.min(1.55, Math.max(0.85, 0.75 + 0.25*z))});
+      list.push({s, x:p[0], y:p[1],
+                 r:(3.4 + s.lv*1.45) * Math.min(1.55, Math.max(0.85, 0.75 + 0.25*z)) * screenF()});
     }
   }
   list.sort((a,b) => a.y - b.y);
@@ -2755,7 +2795,7 @@ function iconCanvas(sh, col){
   shapeDetail(c, sh, 9, 9, 6.6);
   return cv;
 }
-const uiCfg = {open:""};
+const uiCfg = {open:"view"};
 
 function accBlock(key, title, count, body, sw){
   return `<div class="acc${uiCfg.open === key ? " open" : ""}" data-acc="${key}">
@@ -3350,9 +3390,9 @@ function wireSettings(){
     linkCfg.show = true; linkCfg.filter = "";
     eventCfg.show = true; eventCfg.only = false; eventCfg.days = 90;
     if (typeof bubbleCfg !== "undefined"){ bubbleCfg.show = true; bubbleCfg.layer = "d"; }
-    state.borders = true; state.graticule = false; state.night = false; state.rotate = true;
-    if ("relief" in state) state.relief = true;
-    uiCfg.open = "";
+    state.borders = true; state.graticule = false; state.night = false; state.rotate = false;
+    if ("relief" in state) state.relief = false;
+    uiCfg.open = "view";
     syncHeadToggles();
     lastSaved = "";
     updateSiteUI(); render();
@@ -3369,6 +3409,60 @@ requestAnimationFrame(() => {
   render();
   lastSaved = JSON.stringify(snapshot());
 });
+
+/* ==========================================================================
+   MOBILMODUS
+   Auf schmalen Schirmen wird das Bedienfeld zur Schublade hinter einem
+   Knopf, und die Symbole schrumpfen mit der Kugel mit.
+   ========================================================================== */
+
+const MOBILE_W = 720;
+function isNarrow(){ return Math.min(window.innerWidth, window.innerHeight) < 560 ||
+                            window.innerWidth < MOBILE_W; }
+
+function setPanel(open){
+  document.body.classList.toggle("panel-open", open);
+  const b = document.getElementById("panelBtn");
+  if (b) b.classList.toggle("open", open);
+}
+function togglePanel(){ setPanel(!document.body.classList.contains("panel-open")); }
+
+(function wireMobile(){
+  const btn = document.getElementById("panelBtn");
+  const scrim = document.getElementById("panelScrim");
+  if (btn) btn.addEventListener("click", e => { e.stopPropagation(); togglePanel(); });
+  if (scrim) scrim.addEventListener("click", () => setPanel(false));
+  window.addEventListener("keydown", e => {
+    if (e.key === "Escape" && document.body.classList.contains("panel-open")) setPanel(false);
+  });
+  /* Auf dem Telefon startet die Schublade geschlossen, damit der Globus frei liegt */
+  setPanel(!isNarrow());
+  window.addEventListener("resize", () => { if (!isNarrow()) setPanel(true); });
+})();
+
+/* Wird ein Ort angetippt, schließt sich die Schublade, sonst verdeckt sie das Dossier */
+const dossierBeforeMobile = showDossier;
+showDossier = function(s){
+  dossierBeforeMobile(s);
+  if (isNarrow()) setPanel(false);
+};
+if (typeof openNews === "function"){
+  const newsBeforeMobile = openNews;
+  openNews = function(b){ newsBeforeMobile(b); if (isNarrow()) setPanel(false); };
+}
+
+/* Auf Tippschirmen bleibt der Schwebekasten weg: er hängt sonst nach dem
+   Antippen stehen und verdeckt genau die Stelle, die man treffen wollte. */
+const tooltipBeforeMobile = showTooltip;
+showTooltip = function(f, x, y){
+  if (isNarrow()){ hideTooltip(); return; }
+  tooltipBeforeMobile(f, x, y);
+};
+const siteTipBeforeMobile = siteTooltip;
+siteTooltip = function(s, x, y){
+  if (isNarrow()){ hideTooltip(); return; }
+  siteTipBeforeMobile(s, x, y);
+};
 
 window.addEventListener("resize", resize);
 setLang(typeof startLang !== 'undefined' ? startLang : 'en'); // Setzt Englisch als Standard-Sprache beim Start
