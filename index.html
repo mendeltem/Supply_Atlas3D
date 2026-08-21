@@ -1352,19 +1352,12 @@ const MINES = [
 
 const PLANTS = [
 /* ---------------- HALBLEITERFABRIKEN ---------------- */
-{n:"Samsung Pyeongtaek",c:"KOR",la:37.020,lo:127.050,t:"fab",pv:600,lv:5,st:"ex",ow:"Samsung Electronics",ty:"wf",yr:2017,nd:"Größter Halbleiterkomplex der Welt, 2,89 km²; Linien P1-P4 laufen, P5 im Bau",ne:"World's largest semiconductor complex, 2.89 km²; P1-P4 running, P5 under construction"},
 {n:"TSMC Fab 18 (Tainan)",c:"TWN",la:23.100,lo:120.280,t:"fab",pv:150,lv:5,st:"ex",ow:"TSMC",ty:"wf",yr:2018,nd:"Gigafab für 3 nm und 5 nm, Hauptquelle für Apple- und Nvidia-Silizium",ne:"Gigafab for 3nm and 5nm, main source of Apple and Nvidia silicon"},
-{n:"SK Hynix Icheon M16",c:"KOR",la:37.250,lo:127.470,t:"fab",pv:120,lv:5,st:"ex",ow:"SK Hynix",ty:"wf",yr:2021,nd:"Kern der HBM-Fertigung für KI-Beschleuniger",ne:"Core of HBM output for AI accelerators"},
-{n:"Samsung Hwaseong",c:"KOR",la:37.200,lo:127.050,t:"fab",pv:200,lv:5,st:"op",ow:"Samsung Electronics",ty:"wf",yr:2000},
-{n:"Kioxia Yokkaichi",c:"JPN",la:34.950,lo:136.600,t:"fab",pv:150,lv:5,st:"ex",ow:"Kioxia · SanDisk",ty:"wf",yr:1992,nd:"Größter NAND-Standort der Welt",ne:"World's largest NAND site"},
 {n:"TSMC Fab 15 (Taichung)",c:"TWN",la:24.250,lo:120.600,t:"fab",pv:100,lv:4,st:"op",ow:"TSMC",ty:"wf",yr:2012},
 {n:"TSMC Fab 12 (Hsinchu)",c:"TWN",la:24.780,lo:121.000,t:"fab",pv:90,lv:4,st:"op",ow:"TSMC",ty:"wf",yr:2000},
 {n:"TSMC Fab 20 (Baoshan)",c:"TWN",la:24.830,lo:121.020,t:"fab",pv:45,lv:4,st:"ru",ow:"TSMC",ty:"wf",yr:2025,cp:100,nd:"2-nm-Hochlauf seit Ende 2025",ne:"2nm ramp since late 2025"},
 {n:"TSMC Fab 22 (Kaohsiung)",c:"TWN",la:22.700,lo:120.280,t:"fab",pv:30,lv:4,st:"ru",ow:"TSMC",ty:"wf",yr:2025,cp:80,nd:"Zweiter 2-nm-Standort, Ausbau auf A16 geplant",ne:"Second 2nm site, A16 planned"},
 {n:"SMIC Shanghai",c:"CHN",la:31.280,lo:121.600,t:"fab",pv:120,lv:5,st:"ex",ow:"SMIC",ty:"wf",yr:2001,nd:"7 nm über Mehrfachbelichtung, kein EUV wegen Exportkontrollen",ne:"7nm via multi-patterning, no EUV under export controls"},
-{n:"SK Hynix Wuxi",c:"CHN",la:31.530,lo:120.300,t:"fab",pv:150,lv:5,st:"op",ow:"SK Hynix",ty:"wf",yr:2006,nd:"Rund ein Drittel des weltweiten DRAM",ne:"About a third of global DRAM"},
-{n:"Samsung Xi'an",c:"CHN",la:34.200,lo:108.800,t:"fab",pv:130,lv:5,st:"op",ow:"Samsung Electronics",ty:"wf",yr:2014,nd:"Etwa 40 % der Samsung-NAND-Kapazität",ne:"About 40% of Samsung's NAND capacity"},
-{n:"Micron Hiroshima",c:"JPN",la:34.550,lo:132.750,t:"fab",pv:100,lv:4,st:"ex",ow:"Micron Technology",ty:"wf",yr:1984,nd:"Erster EUV-DRAM-Standort von Micron",ne:"Micron's first EUV DRAM site"},
 {n:"Intel Ocotillo (Fab 52/62)",c:"USA",la:33.300,lo:-111.930,t:"fab",pv:60,lv:4,st:"ru",ow:"Intel",ty:"wf",yr:2025,nd:"18A-Fertigung, Intels Rückkehr an die Spitzenfertigung",ne:"18A production, Intel's bid to regain leading edge"},
 {n:"Intel Leixlip Fab 34",c:"IRL",la:53.370,lo:-6.500,t:"fab",pv:40,lv:4,st:"op",ow:"Intel",ty:"wf",yr:2023,nd:"Einzige EUV-Fab der EU im Volumenbetrieb",ne:"Only EU EUV fab in volume production"},
 {n:"Intel Kiryat Gat",c:"ISR",la:31.620,lo:34.770,t:"fab",pv:50,lv:4,st:"op",ow:"Intel",ty:"wf",yr:1999},
@@ -1372,14 +1365,11 @@ const PLANTS = [
 {n:"Samsung Taylor",c:"USA",la:30.580,lo:-97.410,t:"fab",pv:10,lv:4,st:"ru",ow:"Samsung Electronics",ty:"wf",yr:2026,cp:60,nd:"2-nm-Hochlauf, Ziel rund 21.000 Wafer/Monat bis Ende 2026",ne:"2nm ramp, target about 21,000 wpm by end 2026"},
 {n:"GlobalFoundries Malta",c:"USA",la:42.950,lo:-73.790,t:"fab",pv:60,lv:3,st:"ex",ow:"GlobalFoundries",ty:"wf",yr:2012},
 {n:"Texas Instruments Sherman",c:"USA",la:33.650,lo:-96.600,t:"fab",pv:30,lv:3,st:"ru",ow:"Texas Instruments",ty:"wf",yr:2025,cp:120,nd:"Vier Fabs geplant, 40 Mrd. $ Analog-Megasite",ne:"Four fabs planned, $40B analog megasite"},
-{n:"Micron Boise ID1",c:"USA",la:43.530,lo:-116.200,t:"fab",pv:0,lv:4,st:"co",ow:"Micron Technology",ty:"wf",cp:100,nd:"Erste neue US-DRAM-Fab seit 20 Jahren, Start 2027",ne:"First new US DRAM fab in 20 years, start 2027"},
-{n:"Micron Clay (New York)",c:"USA",la:43.150,lo:-76.200,t:"fab",pv:0,lv:4,st:"co",ow:"Micron Technology",ty:"wf",cp:200,nd:"Vier Fabs über 20 Jahre, Teil von 200 Mrd. $ Gesamtprogramm",ne:"Four fabs over 20 years, part of a $200B programme"},
 {n:"Intel Ohio One",c:"USA",la:40.050,lo:-82.550,t:"fab",pv:0,lv:4,st:"co",ow:"Intel",ty:"wf",cp:100,nd:"Mehrfach verschoben, Produktionsstart Ende des Jahrzehnts",ne:"Repeatedly delayed, production late this decade"},
 {n:"Rapidus Chitose",c:"JPN",la:42.800,lo:141.650,t:"fab",pv:0,lv:3,st:"co",ow:"Rapidus · japanischer Staat",ty:"wf",cp:40,nd:"2-nm-Pilotlinie läuft, Serienfertigung ab 2027 geplant",ne:"2nm pilot line running, mass production targeted 2027"},
 {n:"TSMC ESMC Dresden",c:"DEU",la:51.130,lo:13.790,t:"fab",pv:0,lv:3,st:"co",ow:"TSMC · Bosch · Infineon · NXP",ty:"wf",cp:40,nd:"22/28 nm für Autoelektronik, Start 2027",ne:"22/28nm for automotive, start 2027"},
 {n:"TSMC JASM Kumamoto",c:"JPN",la:32.900,lo:130.750,t:"fab",pv:55,lv:3,st:"ex",ow:"TSMC · Sony · Denso",ty:"wf",yr:2024,nd:"Zweite Phase im Bau",ne:"Second phase under construction"},
 {n:"Infineon Smart Power Fab",c:"DEU",la:51.120,lo:13.750,t:"fab",pv:30,lv:3,st:"ru",ow:"Infineon",ty:"wf",yr:2026,nd:"Größte Einzelinvestition der Firmengeschichte",ne:"Largest single investment in the company's history"},
-{n:"SK Hynix Yongin",c:"KOR",la:37.240,lo:127.200,t:"fab",pv:0,lv:4,st:"co",ow:"SK Hynix",ty:"wf",cp:400,nd:"Vier Fabs, erste ab 2027",ne:"Four fabs, first from 2027"},
 {n:"Hua Hong Wuxi",c:"CHN",la:31.500,lo:120.350,t:"fab",pv:80,lv:3,st:"ex",ow:"Hua Hong Semiconductor",ty:"wf",yr:2019},
 {n:"UMC Fab 12A Tainan",c:"TWN",la:23.120,lo:120.290,t:"fab",pv:90,lv:3,st:"op",ow:"UMC",ty:"wf",yr:2001},
 
@@ -1825,7 +1815,73 @@ const HUBS = [
    Endpunkte werden über den Namen aufgelöst; Tippfehler fallen im Test auf.
    ========================================================================== */
 
+const MEM = [
+/* ---------------- SAMSUNG ---------------- */
+{n:"Samsung Pyeongtaek",c:"KOR",la:37.020,lo:127.050,t:"samsung",pv:600,lv:5,st:"ex",ow:"Samsung Electronics",ty:"wf",yr:2017,cp:800,nd:"Größter Halbleiterkomplex der Welt, 2,89 km²; DRAM, NAND und HBM, Linien P1-P4 laufen, P5 im Bau",ne:"World's largest semiconductor complex, 2.89 km²; DRAM, NAND and HBM, lines P1-P4 running, P5 under construction"},
+{n:"Samsung Hwaseong",c:"KOR",la:37.200,lo:127.050,t:"samsung",pv:200,lv:5,st:"op",ow:"Samsung Electronics",ty:"wf",yr:2000,nd:"Ältester Speicherkern des Konzerns, heute DRAM und Auftragsfertigung nebeneinander",ne:"The group's oldest memory core, today DRAM and foundry work side by side"},
+{n:"Samsung Xi'an",c:"CHN",la:34.200,lo:108.800,t:"samsung",pv:130,lv:5,st:"op",ow:"Samsung Electronics",ty:"wf",yr:2014,nd:"Etwa 40 % der Samsung-NAND-Kapazität",ne:"About 40% of Samsung's NAND capacity"},
+{n:"Samsung Cheonan",c:"KOR",la:36.820,lo:127.150,t:"samsung",lv:4,st:"ex",ow:"Samsung Electronics",ty:"hb",yr:1991,nd:"Rückseitenfertigung für HBM-Stapel und Speichermodule",ne:"Back-end site for HBM stacks and memory modules"},
+{n:"Samsung Onyang",c:"KOR",la:36.780,lo:126.990,t:"samsung",lv:3,st:"op",ow:"Samsung Electronics",ty:"bt",yr:1991,nd:"Montage und Test, arbeitet den HBM-Linien in Cheonan zu",ne:"Assembly and test, feeding the HBM lines in Cheonan"},
+{n:"Samsung Suzhou",c:"CHN",la:31.300,lo:120.600,t:"samsung",lv:3,st:"op",ow:"Samsung Electronics",ty:"bt",yr:1995,nd:"Montage und Test für die chinesische NAND-Produktion",ne:"Assembly and test for the Chinese NAND output"},
+{n:"Samsung Yongin (Namsa)",c:"KOR",la:37.130,lo:127.180,t:"samsung",pv:0,lv:4,st:"co",ow:"Samsung Electronics",ty:"wf",cp:500,nd:"Nationaler Halbleitercluster, sechs Fabs geplant, erste Fab gegen 2030",ne:"National semiconductor cluster, six fabs planned, first fab around 2030"},
+
+/* ---------------- SK HYNIX ---------------- */
+{n:"SK Hynix Icheon M16",c:"KOR",la:37.250,lo:127.470,t:"skhynix",pv:120,lv:5,st:"ex",ow:"SK hynix",ty:"wf",yr:2021,nd:"Kern der HBM-Fertigung für KI-Beschleuniger",ne:"Core of HBM output for AI accelerators"},
+{n:"SK Hynix Cheongju M15",c:"KOR",la:36.630,lo:127.450,t:"skhynix",pv:100,lv:4,st:"op",ow:"SK hynix",ty:"wf",yr:2018,nd:"NAND-Werk, Teile der Linie werden auf DRAM umgestellt",ne:"NAND plant, parts of the line are being converted to DRAM"},
+{n:"SK Hynix Cheongju M15X",c:"KOR",la:36.645,lo:127.462,t:"skhynix",pv:0,lv:4,st:"ru",ow:"SK hynix",ty:"wf",yr:2026,cp:120,nd:"Neubau allein für DRAM und HBM, Hochlauf ab 2026",ne:"New build purely for DRAM and HBM, ramping from 2026"},
+{n:"SK Hynix Wuxi",c:"CHN",la:31.530,lo:120.300,t:"skhynix",pv:150,lv:5,st:"op",ow:"SK hynix",ty:"wf",yr:2006,nd:"Rund ein Drittel des weltweiten DRAM",ne:"About a third of global DRAM"},
+{n:"SK Hynix Dalian",c:"CHN",la:38.930,lo:121.630,t:"skhynix",pv:100,lv:4,st:"op",ow:"SK hynix · Solidigm",ty:"wf",yr:2006,nd:"Von Intel übernommene NAND-Fab, geführt unter der Marke Solidigm",ne:"NAND fab bought from Intel, run under the Solidigm brand"},
+{n:"SK Hynix Chongqing",c:"CHN",la:29.600,lo:106.500,t:"skhynix",lv:3,st:"op",ow:"SK hynix",ty:"bt",yr:2014,nd:"Montage und Test für DRAM aus Wuxi",ne:"Assembly and test for DRAM from Wuxi"},
+{n:"SK Hynix Yongin",c:"KOR",la:37.190,lo:127.280,t:"skhynix",pv:0,lv:4,st:"co",ow:"SK hynix",ty:"wf",cp:400,nd:"Vier Fabs im Cluster Wonsam, erste ab 2027",ne:"Four fabs in the Wonsam cluster, first from 2027"},
+{n:"SK Hynix West Lafayette",c:"USA",la:40.430,lo:-86.910,t:"skhynix",pv:0,lv:3,st:"co",ow:"SK hynix",ty:"hb",nd:"Erste HBM-Stapelung in den USA, Ausbringung ab 2028",ne:"First HBM stacking in the United States, output from 2028"},
+
+/* ---------------- MICRON ---------------- */
+{n:"Micron Taichung Fab 16",c:"TWN",la:24.190,lo:120.610,t:"micron",pv:120,lv:5,st:"ex",ow:"Micron Technology",ty:"wf",yr:2016,nd:"Größter DRAM-Standort von Micron und Kern der HBM-Fertigung",ne:"Micron's largest DRAM site and the core of its HBM output"},
+{n:"Micron Hiroshima",c:"JPN",la:34.550,lo:132.750,t:"micron",pv:100,lv:4,st:"ex",ow:"Micron Technology",ty:"wf",yr:1984,cp:140,nd:"Erster EUV-DRAM-Standort von Micron, Erweiterung mit japanischer Förderung",ne:"Micron's first EUV DRAM site, the extension is backed by Japanese subsidies"},
+{n:"Micron Taoyuan Fab 11",c:"TWN",la:25.000,lo:121.220,t:"micron",pv:100,lv:4,st:"op",ow:"Micron Technology",ty:"wf",yr:2016,nd:"Früher Inotera, seit 2016 vollständig bei Micron",ne:"Formerly Inotera, fully owned by Micron since 2016"},
+{n:"Micron Singapore Fab 10",c:"SGP",la:1.440,lo:103.790,t:"micron",pv:90,lv:4,st:"ex",ow:"Micron Technology",ty:"wf",yr:2010,nd:"Schwerpunkt der NAND-Fertigung des Konzerns",ne:"Focal point of the group's NAND output"},
+{n:"Micron Singapore HBM Packaging",c:"SGP",la:1.448,lo:103.800,t:"micron",lv:3,st:"co",ow:"Micron Technology",ty:"hb",nd:"Erste HBM-Rückseitenfertigung außerhalb Taiwans, ab 2027",ne:"First HBM back-end outside Taiwan, from 2027"},
+{n:"Micron Manassas",c:"USA",la:38.760,lo:-77.500,t:"micron",pv:30,lv:3,st:"ex",ow:"Micron Technology",ty:"wf",yr:2002,nd:"Langlebige DRAM- und NOR-Bauteile für Auto und Industrie",ne:"Long-lifecycle DRAM and NOR parts for cars and industry"},
+{n:"Micron Xi'an",c:"CHN",la:34.200,lo:108.900,t:"micron",lv:3,st:"op",ow:"Micron Technology",ty:"bt",yr:2007,nd:"Montage und Test, ausgebaut für mobile Speichermodule",ne:"Assembly and test, expanded for mobile memory modules"},
+{n:"Micron Penang",c:"MYS",la:5.330,lo:100.400,t:"micron",lv:3,st:"ex",ow:"Micron Technology",ty:"bt",yr:2010,nd:"Rückseitenfertigung für NAND-Speicher und SSD",ne:"Back-end for NAND memory and SSDs"},
+{n:"Micron Boise ID1",c:"USA",la:43.530,lo:-116.200,t:"micron",pv:0,lv:4,st:"co",ow:"Micron Technology",ty:"wf",cp:100,nd:"Erste neue US-DRAM-Fab seit 20 Jahren, Start 2027",ne:"First new US DRAM fab in 20 years, start 2027"},
+{n:"Micron Clay (New York)",c:"USA",la:43.150,lo:-76.200,t:"micron",pv:0,lv:4,st:"co",ow:"Micron Technology",ty:"wf",cp:200,nd:"Vier Fabs über 20 Jahre, Teil eines Programms von 200 Mrd. $",ne:"Four fabs over 20 years, part of a $200bn programme"},
+
+/* ---------------- KIOXIA UND SANDISK ---------------- */
+{n:"Kioxia Yokkaichi",c:"JPN",la:34.950,lo:136.600,t:"kioxia",pv:150,lv:5,st:"ex",ow:"Kioxia · SanDisk",ty:"wf",yr:1992,nd:"Größter NAND-Standort der Welt, gemeinsam mit SanDisk betrieben",ne:"World's largest NAND site, run jointly with SanDisk"},
+{n:"Kioxia Kitakami",c:"JPN",la:39.290,lo:141.110,t:"kioxia",pv:60,lv:4,st:"ex",ow:"Kioxia · SanDisk",ty:"wf",yr:2020,cp:100,nd:"Zweiter Verbundstandort des Gemeinschaftsunternehmens, K2 im Hochlauf",ne:"Second joint-venture site, K2 ramping"},
+{n:"SanDisk Shanghai",c:"CHN",la:31.150,lo:121.400,t:"sandisk",lv:3,st:"op",ow:"SanDisk",ty:"bt",yr:2006,nd:"Montage und Test für Karten und SSD aus dem Verbund mit Kioxia",ne:"Assembly and test for cards and SSDs from the Kioxia venture"},
+
+/* ---------------- CHINESISCHE HERSTELLER ---------------- */
+{n:"YMTC Wuhan Fab 1",c:"CHN",la:30.480,lo:114.400,t:"ymtc",pv:100,lv:5,st:"op",ow:"Yangtze Memory Technologies",ty:"wf",yr:2018,nd:"Chinas führender NAND-Hersteller, seit 2022 unter US-Exportkontrollen",ne:"China's leading NAND maker, under US export controls since 2022"},
+{n:"YMTC Wuhan Fab 3",c:"CHN",la:30.492,lo:114.412,t:"ymtc",pv:30,lv:4,st:"ru",ow:"Yangtze Memory Technologies",ty:"wf",yr:2025,cp:100,nd:"Ausbaustufe rund um heimische Anlagen",ne:"Expansion stage built around domestic tooling"},
+{n:"CXMT Hefei Fab 1",c:"CHN",la:31.780,lo:117.230,t:"cxmt",pv:120,lv:5,st:"ex",ow:"ChangXin Memory Technologies",ty:"wf",yr:2019,nd:"Chinas größter DRAM-Hersteller, Hochlauf von DDR5",ne:"China's largest DRAM maker, ramping DDR5"},
+{n:"CXMT Hefei Fab 2",c:"CHN",la:31.792,lo:117.242,t:"cxmt",pv:40,lv:4,st:"ru",ow:"ChangXin Memory Technologies",ty:"wf",yr:2025,cp:100,nd:"Zweite Ausbaustufe, erste HBM-Muster",ne:"Second stage, first HBM samples"},
+{n:"CXMT Beijing",c:"CHN",la:40.000,lo:116.480,t:"cxmt",pv:0,lv:3,st:"co",ow:"ChangXin Memory Technologies",ty:"wf",cp:80,nd:"Dritter Standort, im Bau",ne:"Third site, under construction"},
+{n:"Fujian Jinhua",c:"CHN",la:24.900,lo:118.590,t:"etc",pv:30,lv:3,st:"op",ow:"Fujian Jinhua Integrated Circuit",ty:"wf",yr:2018,nd:"Nach dem US-Bann von 2018 mit heimischer Technik wieder angelaufen",ne:"Restarted with domestic technology after the 2018 US ban"},
+{n:"Wuhan Xinxin (XMC)",c:"CHN",la:30.470,lo:114.410,t:"etc",pv:40,lv:3,st:"op",ow:"XMC",ty:"wf",yr:2008,nd:"NOR-Flash und Spezialverfahren, eng mit YMTC verzahnt",ne:"NOR flash and specialty processes, closely tied to YMTC"},
+
+/* ---------------- TAIWAN UND MODULE ---------------- */
+{n:"Nanya Hwa Ya (Fab 3A)",c:"TWN",la:25.000,lo:121.250,t:"nanya",pv:70,lv:4,st:"op",ow:"Nanya Technology",ty:"wf",yr:2010,nd:"Größter unabhängiger DRAM-Hersteller Taiwans",ne:"Taiwan's largest independent DRAM maker"},
+{n:"Nanya Fab 5 (Taoyuan)",c:"TWN",la:25.012,lo:121.262,t:"nanya",pv:0,lv:3,st:"co",ow:"Nanya Technology",ty:"wf",cp:45,nd:"Neubau für DRAM der 10-nm-Klasse mit EUV",ne:"New build for 10nm-class DRAM with EUV"},
+{n:"Winbond Kaohsiung",c:"TWN",la:22.790,lo:120.280,t:"winbond",pv:44,lv:3,st:"ex",ow:"Winbond Electronics",ty:"wf",yr:2022,nd:"Spezialspeicher, NOR-Flash und Nischen-DRAM",ne:"Specialty memory, NOR flash and niche DRAM"},
+{n:"Winbond Taichung",c:"TWN",la:24.200,lo:120.630,t:"winbond",pv:44,lv:3,st:"op",ow:"Winbond Electronics",ty:"wf",yr:1996,nd:"Stammwerk im Central Taiwan Science Park",ne:"Original plant in the Central Taiwan Science Park"},
+{n:"PSMC Hsinchu",c:"TWN",la:24.780,lo:121.010,t:"etc",pv:60,lv:3,st:"op",ow:"Powerchip Semiconductor",ty:"wf",yr:1994,nd:"Auftragsfertigung von DRAM und Spezialspeicher",ne:"Foundry work for DRAM and specialty memory"},
+{n:"Kingston Hsinchu",c:"TWN",la:24.800,lo:121.000,t:"etc",lv:2,st:"op",ow:"Kingston Technology",ty:"md",yr:1996,nd:"Größter unabhängiger Modulhersteller, Bestückung und Test",ne:"Largest independent module maker, assembly and test"}
+];
+
 const LINKS = [
+{a:"Samsung Pyeongtaek", b:"Samsung Cheonan", t:"chip"},
+{a:"Samsung Xi'an", b:"Samsung Suzhou", t:"chip"},
+{a:"SK Hynix Icheon M16", b:"SK Hynix Chongqing", t:"chip"},
+{a:"SK Hynix Wuxi", b:"SK Hynix Chongqing", t:"chip"},
+{a:"Micron Taichung Fab 16", b:"Micron Xi'an", t:"chip"},
+{a:"Micron Singapore Fab 10", b:"Micron Penang", t:"chip"},
+{a:"Kioxia Yokkaichi", b:"SanDisk Shanghai", t:"chip"},
+{a:"Kioxia Kitakami", b:"SanDisk Shanghai", t:"chip"},
+{a:"ASML Veldhoven", b:"SK Hynix Icheon M16", t:"tool"},
+{a:"ASML Veldhoven", b:"Micron Taichung Fab 16", t:"tool"},
+
 /* ---------------- ERZ UND KONZENTRAT ---------------- */
 {a:"Escondida", b:"Mejillones & Antofagasta", t:"ore"},
 {a:"Mejillones & Antofagasta", b:"Guixi Jiangxi Copper", t:"ore"},
@@ -2184,6 +2240,20 @@ const HUB_META = {
   choke: {col:"#ff7a4a", sh:"hourglass", de:"Meerenge",  en:"Chokepoint", ud:"", ue:""}
 };
 
+/* Speicher: die Farbe steht fuer den Hersteller, nicht fuer das Produkt */
+const MEM_META = {
+  samsung: {col:"#3d7bff", sh:"chip",    de:"Samsung",  en:"Samsung",  ud:"Tsd. Wafer/Monat", ue:"k wafers/month"},
+  skhynix: {col:"#ff7a2b", sh:"hex",     de:"SK hynix", en:"SK hynix", ud:"Tsd. Wafer/Monat", ue:"k wafers/month"},
+  micron:  {col:"#2ee6a8", sh:"pent",    de:"Micron",   en:"Micron",   ud:"Tsd. Wafer/Monat", ue:"k wafers/month"},
+  kioxia:  {col:"#ff4d6d", sh:"sqround", de:"Kioxia",   en:"Kioxia",   ud:"Tsd. Wafer/Monat", ue:"k wafers/month"},
+  sandisk: {col:"#ffd23f", sh:"diamond", de:"SanDisk",  en:"SanDisk",  ud:"Tsd. Wafer/Monat", ue:"k wafers/month"},
+  ymtc:    {col:"#b06cff", sh:"chip2",   de:"YMTC",     en:"YMTC",     ud:"Tsd. Wafer/Monat", ue:"k wafers/month"},
+  cxmt:    {col:"#ff8ad8", sh:"oct",     de:"CXMT",     en:"CXMT",     ud:"Tsd. Wafer/Monat", ue:"k wafers/month"},
+  nanya:   {col:"#6fd6ff", sh:"tri",     de:"Nanya",    en:"Nanya",    ud:"Tsd. Wafer/Monat", ue:"k wafers/month"},
+  winbond: {col:"#9fd45a", sh:"tridown", de:"Winbond",  en:"Winbond",  ud:"Tsd. Wafer/Monat", ue:"k wafers/month"},
+  etc:     {col:"#aebccf", sh:"square",  de:"Weitere Hersteller", en:"Other makers", ud:"Tsd. Wafer/Monat", ue:"k wafers/month"}
+};
+
 const CAP_META = {
   cap:  {col:"#ffe1a8", sh:"capdot",  de:"Hauptstadt",     en:"Capital city",       ud:"Mio.", ue:"M"},
   seat: {col:"#e0c48a", sh:"capring", de:"Regierungssitz", en:"Seat of government", ud:"Mio.", ue:"M"}
@@ -2228,7 +2298,10 @@ const SITE_KIND = {
   gt:{de:"Geothermie",en:"Geothermal"}, pw:{de:"Kraftwerk",en:"Power station"},
   ct:{de:"Containerhafen",en:"Container port"}, bk:{de:"Massengut",en:"Bulk"},
   oil:{de:"Ölterminal",en:"Oil terminal"}, st:{de:"Meerenge",en:"Strait"}, cn:{de:"Kanal",en:"Canal"},
-  ca:{de:"Hauptstadt",en:"Capital"}, sg:{de:"Regierungssitz",en:"Seat of government"}
+  ca:{de:"Hauptstadt",en:"Capital"}, sg:{de:"Regierungssitz",en:"Seat of government"},
+  hb:{de:"HBM-Stapelung und Packaging",en:"HBM stacking and packaging"},
+  bt:{de:"Montage und Test",en:"Assembly and test"},
+  md:{de:"Modulfertigung",en:"Module assembly"}
 };
 
 const SITE_CC = {
@@ -2277,7 +2350,7 @@ i18n.en.ui = {legend:"Legend", lvl:"Level", status:"Status", operator:"Operator"
   allLayers:"all layers", dcNews:"Load data centre news", readMore:"Read the article",
   showOnMap:"Show on the globe", popHint:"click to pop",
   apiHint:"Console: EarthTwin.near(lat, lon, km) · .match(text, lat, lon) · .setEvents([...]) · .flyTo(id)",
-  src:"Mines: 2025 output. Industry and processing: nameplate or last reported capacity. Data centres: Epoch AI. Several figures are estimates."};
+  src:"Mines: 2025 output. Industry and processing: nameplate or last reported capacity. Memory: approximate wafer starts per month. Data centres: Epoch AI. Several figures are estimates."};
 i18n.de.ui = {legend:"Legende", lvl:"Level", status:"Status", operator:"Betreiber",
   planned:"Geplante Kapazität", hint:"Für Details anklicken", links:"Verbindungen", facts:"Wissenswert",
   ex_el:"Höhe über dem Meer", ex_tz:"Zeitzone", ex_yr:"Gegründet", ex_nc:"Nächste Hauptstadt", ex_cp:"Einwohner des Landes",
@@ -2292,7 +2365,7 @@ i18n.de.ui = {legend:"Legende", lvl:"Level", status:"Status", operator:"Betreibe
   allLayers:"alle Ebenen", dcNews:"Rechenzentrums-Meldungen laden", readMore:"Zum Artikel",
   showOnMap:"Auf dem Globus zeigen", popHint:"anklicken zum Platzen",
   apiHint:"Konsole: EarthTwin.near(Breite, Länge, km) · .match(text, lat, lon) · .setEvents([...]) · .flyTo(id)",
-  src:"Minen: Förderung 2025. Industrie und Verarbeitung: Nenn- oder zuletzt gemeldete Kapazität. Rechenzentren: Epoch AI. Mehrere Werte sind Schätzungen."};
+  src:"Minen: Förderung 2025. Industrie und Verarbeitung: Nenn- oder zuletzt gemeldete Kapazität. Speicher: ungefähre Waferstarts je Monat. Rechenzentren: Epoch AI. Mehrere Werte sind Schätzungen."};
 
 i18n.en.cp = {panel:"Capitals", show:"Show capitals", allLv:"Show small capitals too", filterAll:"All",
   output:"Population", since:"", noOutput:"no figure", kind:"Type"};
@@ -2306,6 +2379,10 @@ i18n.en.pl = {panel:"Industry", show:"Show plants", allLv:"Show small plants too
   output:"Capacity", since:"In service since", noOutput:"not producing yet", kind:"Type"};
 i18n.de.pl = {panel:"Industrie", show:"Werke anzeigen", allLv:"Auch kleine Werke", filterAll:"Alle Branchen",
   output:"Kapazität", since:"In Betrieb seit", noOutput:"noch keine Produktion", kind:"Typ"};
+i18n.en.me = {panel:"Memory supply", show:"Show memory sites", allLv:"Show small sites too", filterAll:"All makers",
+  output:"Wafer capacity", since:"In service since", noOutput:"no wafer figure", kind:"Type"};
+i18n.de.me = {panel:"Speicher (Memory)", show:"Speicherstandorte anzeigen", allLv:"Auch kleine Standorte", filterAll:"Alle Hersteller",
+  output:"Waferkapazität", since:"In Betrieb seit", noOutput:"keine Waferangabe", kind:"Art"};
 i18n.en.dc = {panel:"Data centres", show:"Show data centres", allLv:"Show small sites too", filterAll:"All types",
   output:"IT power", since:"Live since", noOutput:"not live yet", kind:"Power"};
 i18n.de.dc = {panel:"Rechenzentren", show:"Rechenzentren anzeigen", allLv:"Auch kleine Standorte", filterAll:"Alle Arten",
@@ -2329,6 +2406,7 @@ i18n.de.hb = {panel:"Häfen & Meerengen", show:"Häfen und Meerengen anzeigen", 
 const RAW = {};
 try { RAW.m = MINES;    } catch(e){}
 try { RAW.p = PLANTS;   } catch(e){}
+try { RAW.y = MEM;      } catch(e){}
 try { RAW.d = DCS;      } catch(e){}
 try { RAW.r = PROC;     } catch(e){}
 try { RAW.e = POWER;    } catch(e){}
@@ -2340,6 +2418,7 @@ let ISO_MAP = {};   try { ISO_MAP = ISO3_2; } catch(e){}
 const LAYER_SPEC = {
   m:{meta:MINE_META,  words:"mn", big:true },
   p:{meta:PLANT_META, words:"pl", big:true },
+  y:{meta:MEM_META,   words:"me", big:true },
   d:{meta:DC_META,    words:"dc", big:false},
   r:{meta:PROC_META,  words:"pr", big:false},
   e:{meta:POWER_META, words:"pw", big:false},
@@ -2348,7 +2427,7 @@ const LAYER_SPEC = {
 };
 const LAYERS = {};
 const LAYER_KEYS = [];
-for (const k of ["m","p","d","r","e","h","c"]){
+for (const k of ["m","p","y","d","r","e","h","c"]){
   if (!RAW[k]) continue;
   LAYER_KEYS.push(k);
   LAYERS[k] = {arr:RAW[k], meta:LAYER_SPEC[k].meta, words:LAYER_SPEC[k].words,
@@ -3060,7 +3139,7 @@ const ALL_SITES = LAYER_KEYS.flatMap(k => LAYERS[k].arr);
 const BY_ID = {};
 for (const s of ALL_SITES) BY_ID[s.id] = s;
 
-const LAYER_NAME = {m:"mine", p:"industry", d:"datacenter", r:"processing", e:"power", h:"hub"};
+const LAYER_NAME = {m:"mine", p:"industry", y:"memory", d:"datacenter", r:"processing", e:"power", h:"hub"};
 
 function distKm(la1, lo1, la2, lo2){
   const R = 6371, rad = Math.PI/180;
