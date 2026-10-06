@@ -2073,7 +2073,8 @@ function ucBanner(){
   const ps = UC_SEL.places;
   /* nach Land gruppieren, Reihenfolge des ersten Auftretens */
   const groups = [];
-  ps.forEach((p, i) => {
+  if (UC_SEL.groups) UC_SEL.groups.forEach(g => groups.push({label:g.label, items:g.items}));
+  else ps.forEach((p, i) => {
     let g = groups.find(x => x.c === p.c);
     if (!g){ g = {c:p.c, items:[]}; groups.push(g); }
     g.items.push(i);
@@ -2084,7 +2085,7 @@ function ucBanner(){
       <a href="${UC_SEL.back || (UC_BOARD + "#uc=" + UC_SEL.slug)}" target="_blank" rel="noopener">${UC_SEL.backLabel ? (L()?UC_SEL.backLabel.de:UC_SEL.backLabel.en) : (L()?"Karte öffnen":"Open card")} ↗</a>
       <label class="ucb-all"><input type="checkbox" ${UC_SHOWALL?"checked":""}> ${L()?"Alle Standorte zeigen":"Show all sites"}</label>
       <span class="ucb-x" title="${L()?"Schließen":"Close"}">×</span></div>
-    <div class="ucb-groups">${groups.map(g => `<div class="ucb-group"><span class="ucb-cc">${siteFlag(g)} ${siteCountry(g)} <i>${g.items.length}</i></span>${g.items.map(i => `<button class="ucb-chip${i===UC_IDX?" on":""}" data-i="${i}">${ps[i].n}</button>`).join("")}</div>`).join("")}</div>`;
+    <div class="ucb-groups">${groups.map(g => `<div class="ucb-group"><span class="ucb-cc">${g.label ? (L()?g.label.de:g.label.en) : siteFlag(g)+" "+siteCountry(g)} <i>${g.items.length}</i></span>${g.items.map(i => `<button class="ucb-chip${i===UC_IDX?" on":""}" data-i="${i}" title="${siteCountry(ps[i])}">${g.label ? siteFlag(ps[i])+" " : ""}${ps[i].n}</button>`).join("")}</div>`).join("")}</div>`;
   b.querySelector(".ucb-x").onclick = () => {
     UC_SEL = null; UC_FOCUS = null; UC_IDX = -1; UC_SHOWALL = false; ucBanner(); history.replaceState(null, "", location.pathname);
     document.getElementById("dossier").style.display = "none"; selectedSite = null; render();
@@ -2143,13 +2144,28 @@ fetch(UC_DEP_URL).then(r => r.ok ? r.json() : null).then(d => {
     for (const p of u.places) if (p.site) (SITE_UC[p.site] = SITE_UC[p.site] || []).push({slug, u});
   }
   const comp = UC_PARAMS.get("company");
-  if (comp && UC_COMP && UC_COMP.operators[comp]){
-    const frags = UC_COMP.operators[comp], nm = UC_COMP.names[comp] || comp;
-    const sites = [MINES,PLANTS,DCS,PROC,POWER,HUBS,MEM].flat().filter(x => x.ow && frags.some(f => x.ow.includes(f)));
-    const places = sites.map(x => ({n:x.n, c:x.c, la:x.la, lo:x.lo, en:(x.aiu||{}).en||"", de:(x.aiu||{}).de||"", src:(x.aiu||{}).src||"", yr:(x.aiu||{}).yr||"", site:x}));
-    UC_SEL = {slug: "", kindLabel: {en:"Company", de:"Firma"}, u: {name:{en: nm + " · sites", de: nm + " · Standorte"}}, places,
+  if (comp && UC_COMP && (UC_COMP.operators[comp] || (UC_COMP.relations||{})[comp])){
+    const frags = UC_COMP.operators[comp] || [], nm = UC_COMP.names[comp] || comp;
+    const all = [MINES,PLANTS,DCS,PROC,POWER,HUBS,MEM].flat();
+    const toPlace = x => ({n:x.n, c:x.c, la:x.la, lo:x.lo, en:(x.aiu||{}).en||"", de:(x.aiu||{}).de||"", src:(x.aiu||{}).src||"", yr:(x.aiu||{}).yr||"", site:x});
+    /* Rollen: betreibt (Betreiberfeld) plus Lieferkette und Kunden aus deployments.json */
+    const roles = [];
+    const seen = new Set();
+    const own = all.filter(x => x.ow && frags.some(f => x.ow.includes(f)));
+    if (own.length) roles.push({role:"operates", sites:own});
+    for (const r of ((UC_COMP.relations||{})[comp] || [])){
+      const ss = r.sites.map(findSite).filter(Boolean);
+      if (ss.length) roles.push({role:r.role, sites:ss});
+    }
+    const places = [], groups = [];
+    for (const r of roles){
+      const idx = [];
+      for (const x of r.sites){ if (seen.has(x.n)) continue; seen.add(x.n); idx.push(places.length); places.push(toPlace(x)); }
+      if (idx.length) groups.push({label:(UC_COMP.roles||{})[r.role] || {en:r.role, de:r.role}, items:idx});
+    }
+    UC_SEL = {slug: "", kindLabel: {en:"Company", de:"Firma"}, u: {name:{en: nm, de: nm}}, places, groups,
               back: UC_COMP.page + "#/" + (L()?"de":"en") + "/" + comp, backLabel: {en:"Market figures", de:"Börsen-Kennzahlen"}};
-    UC_FOCUS = new Set(sites.map(x => x.n));
+    UC_FOCUS = new Set(places.map(p => p.n));
     ucBanner();
     if (places.length) ucFlyTo(places[0]);
   }
