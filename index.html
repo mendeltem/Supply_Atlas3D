@@ -2029,6 +2029,15 @@ const UC_DEP_URL = UC_PARAMS.get("dep") || (UC_BOARD + "deployments.json");
 let UC_ALL = null, UC_SEL = null, UC_FOCUS = null, ucVisible = [], ucHover = null;
 const SITE_UC = {};
 function ucName(u){ return L() ? u.name.de : u.name.en; }
+let UC_COMP = null;
+function compLinks(s){
+  if (!UC_COMP || !s.ow) return "";
+  const hit = Object.keys(UC_COMP.operators).filter(k => UC_COMP.operators[k].some(f => s.ow.includes(f)));
+  if (!hit.length) return "";
+  const lang = L() ? "de" : "en";
+  return `<div class="dos-note">📈 ${L()?"Börsen-Kennzahlen":"Market figures"}: ` + hit.map(k =>
+    `<a href="${UC_COMP.page}#/${lang}/${k}" target="_blank" rel="noopener" style="color:#7fd0ff;font-weight:600;text-decoration:none;margin-right:8px">${UC_COMP.names[k]||k} ↗</a>`).join("") + `</div>`;
+}
 function ucLinks(s){
   const list = SITE_UC[s.n]; if (!list) return "";
   return list.map(x => `<a href="${UC_BOARD}#uc=${x.slug}" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;color:#5CFFB0;font-weight:600;text-decoration:none">→ ${L()?"Use Case":"Use case"}: ${ucName(x.u)}</a>`).join("<br>");
@@ -2124,6 +2133,7 @@ function ucDossier(p){
 fetch(UC_DEP_URL).then(r => r.ok ? r.json() : null).then(d => {
   if (!d || !d.use_cases) return;
   UC_ALL = d.use_cases;
+  UC_COMP = d.companies || null;
   for (const slug in UC_ALL){
     const u = UC_ALL[slug];
     for (const p of u.places) if (p.site) (SITE_UC[p.site] = SITE_UC[p.site] || []).push({slug, u});
@@ -3021,6 +3031,7 @@ function showDossier(s){
      ${note?`<div class="dos-note">${note}</div>`:""}
      ${aiBlock(s)}
      ${ucLinks(s)?`<div class="dos-note">${ucLinks(s)}</div>`:""}
+     ${compLinks(s)}
      ${factRows(s)}
      ${eventRows(s)}
      ${linkRows(s)}`;
