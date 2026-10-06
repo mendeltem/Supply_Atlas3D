@@ -142,9 +142,18 @@
   #ucBanner .ucb-n{color:#9fb3c8}
   #ucBanner a{color:#5CFFB0;text-decoration:none;font-weight:600}
   #ucBanner .ucb-x{margin-left:auto;cursor:pointer;font-size:18px;line-height:1;color:#9fb3c8}
-  #ucBanner .ucb-chips{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;margin-top:8px;scrollbar-width:thin}
-  #ucBanner .ucb-chip{flex:0 0 auto;cursor:pointer;padding:3px 9px;border-radius:12px;border:1px solid rgba(92,255,176,.35);background:rgba(92,255,176,.08)}
+  #ucBanner .ucb-nav{display:inline-flex;align-items:center;gap:4px;margin-left:4px}
+  #ucBanner .ucb-nav button{background:rgba(92,255,176,.12);border:1px solid rgba(92,255,176,.45);color:#eaf2ff;border-radius:8px;width:34px;height:30px;font-size:13px;cursor:pointer}
+  #ucBanner .ucb-nav button:hover{background:rgba(92,255,176,.3)}
+  #ucBanner .ucb-pos{min-width:44px;text-align:center;color:#9fb3c8;font-variant-numeric:tabular-nums}
+  #ucBanner .ucb-groups{margin-top:9px;max-height:38vh;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
+  #ucBanner .ucb-group{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+  #ucBanner .ucb-cc{font-size:11.5px;color:#9fb3c8;min-width:118px}
+  #ucBanner .ucb-cc i{font-style:normal;color:#5CFFB0;margin-left:3px}
+  #ucBanner .ucb-chip{cursor:pointer;padding:6px 12px;border-radius:14px;border:1px solid rgba(92,255,176,.35);background:rgba(92,255,176,.08);color:#eaf2ff;font:13px 'Segoe UI',system-ui,sans-serif}
   #ucBanner .ucb-chip:hover{background:rgba(92,255,176,.25)}
+  #ucBanner .ucb-chip.on{background:#5CFFB0;color:#06231a;border-color:#5CFFB0;font-weight:600}
+  @media (max-width:640px){ #ucBanner .ucb-cc{min-width:0;width:100%} #ucBanner .ucb-groups{max-height:30vh} }
   #dossier{animation:dosPop .22s cubic-bezier(.2,1.25,.5,1)}
   @keyframes dosPop{from{opacity:0;transform:translate(-50%,-50%) scale(.92)}
                     to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
@@ -2037,21 +2046,46 @@ function ucPlaces(u){
   }).filter(Boolean);
 }
 function ucFlyTo(p){ rotation = [-p.lo, -Math.max(-60, Math.min(60, p.la))]; needsPick = true; render(); }
+let UC_IDX = -1;
+function ucGo(i){
+  const ps = UC_SEL.places; if (!ps.length) return;
+  UC_IDX = (i + ps.length) % ps.length;
+  const p = ps[UC_IDX];
+  ucFlyTo(p);
+  if (p.site){ selectedSite = p.site; showDossier(p.site); render(); } else ucDossier(p);
+  ucBanner();
+}
 function ucBanner(){
   let b = document.getElementById("ucBanner");
   if (!UC_SEL){ if (b) b.remove(); return; }
   if (!b){ b = document.createElement("div"); b.id = "ucBanner"; document.body.appendChild(b); }
   const ps = UC_SEL.places;
+  /* nach Land gruppieren, Reihenfolge des ersten Auftretens */
+  const groups = [];
+  ps.forEach((p, i) => {
+    let g = groups.find(x => x.c === p.c);
+    if (!g){ g = {c:p.c, items:[]}; groups.push(g); }
+    g.items.push(i);
+  });
+  const pos = UC_IDX >= 0 ? `${UC_IDX+1}/${ps.length}` : `${ps.length}`;
   b.innerHTML = `<div class="ucb-head"><span class="ucb-k">${L()?"Use Case":"Use case"}</span><b>${ucName(UC_SEL.u)}</b>
-      <span class="ucb-n">${ps.length} ${L()?"Orte":"places"}</span>
+      <span class="ucb-nav"><button class="ucb-prev" title="${L()?"Vorheriger Ort":"Previous place"}">◀</button><span class="ucb-pos">${pos}</span><button class="ucb-next" title="${L()?"Nächster Ort":"Next place"}">▶</button></span>
       <a href="${UC_BOARD}#uc=${UC_SEL.slug}" target="_blank" rel="noopener">${L()?"Karte öffnen":"Open card"} ↗</a>
       <span class="ucb-x" title="${L()?"Schließen":"Close"}">×</span></div>
-    <div class="ucb-chips">${ps.map((p,i)=>`<span class="ucb-chip" data-i="${i}">${p.n}</span>`).join("")}</div>`;
+    <div class="ucb-groups">${groups.map(g => `<div class="ucb-group"><span class="ucb-cc">${siteFlag(g)} ${siteCountry(g)} <i>${g.items.length}</i></span>${g.items.map(i => `<button class="ucb-chip${i===UC_IDX?" on":""}" data-i="${i}">${ps[i].n}</button>`).join("")}</div>`).join("")}</div>`;
   b.querySelector(".ucb-x").onclick = () => {
-    UC_SEL = null; UC_FOCUS = null; ucBanner(); history.replaceState(null, "", location.pathname); render();
+    UC_SEL = null; UC_FOCUS = null; UC_IDX = -1; ucBanner(); history.replaceState(null, "", location.pathname);
+    document.getElementById("dossier").style.display = "none"; selectedSite = null; render();
   };
-  b.querySelectorAll(".ucb-chip").forEach(el => el.onclick = () => ucFlyTo(ps[+el.dataset.i]));
+  b.querySelector(".ucb-prev").onclick = () => ucGo(UC_IDX < 0 ? ps.length - 1 : UC_IDX - 1);
+  b.querySelector(".ucb-next").onclick = () => ucGo(UC_IDX + 1);
+  b.querySelectorAll(".ucb-chip").forEach(el => el.onclick = () => ucGo(+el.dataset.i));
 }
+window.addEventListener("keydown", e => {
+  if (!UC_SEL || /INPUT|SELECT|TEXTAREA/.test((document.activeElement||{}).tagName||"")) return;
+  if (e.key === "ArrowRight"){ ucGo(UC_IDX + 1); e.preventDefault(); }
+  if (e.key === "ArrowLeft"){ ucGo(UC_IDX < 0 ? UC_SEL.places.length - 1 : UC_IDX - 1); e.preventDefault(); }
+});
 function drawUcPoints(){
   ucVisible = [];
   if (!UC_SEL) return;
