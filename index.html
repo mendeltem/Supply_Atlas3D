@@ -141,6 +141,8 @@
   #ucBanner .ucb-k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5CFFB0}
   #ucBanner .ucb-n{color:#9fb3c8}
   #ucBanner a{color:#5CFFB0;text-decoration:none;font-weight:600}
+  #ucBanner .ucb-all{font-size:12px;color:#9fb3c8;cursor:pointer;user-select:none}
+  #ucBanner .ucb-all input{vertical-align:-2px;accent-color:#5CFFB0}
   #ucBanner .ucb-x{margin-left:auto;cursor:pointer;font-size:18px;line-height:1;color:#9fb3c8}
   #ucBanner .ucb-nav{display:inline-flex;align-items:center;gap:4px;margin-left:4px}
   #ucBanner .ucb-nav button{background:rgba(92,255,176,.12);border:1px solid rgba(92,255,176,.45);color:#eaf2ff;border-radius:8px;width:34px;height:30px;font-size:13px;cursor:pointer}
@@ -2026,7 +2028,7 @@ function aiLit(s){ return s.aiu && (s.aiu.ai==="site" || s.aiu.ai==="infra"); }
 const UC_BOARD = "https://mendeltem.github.io/ai_use_cases_overview/";
 const UC_PARAMS = new URLSearchParams(location.search);
 const UC_DEP_URL = UC_PARAMS.get("dep") || (UC_BOARD + "deployments.json");
-let UC_ALL = null, UC_SEL = null, UC_FOCUS = null, ucVisible = [], ucHover = null;
+let UC_ALL = null, UC_SEL = null, UC_FOCUS = null, UC_SHOWALL = false, ucVisible = [], ucHover = null;
 const SITE_UC = {};
 function ucName(u){ return L() ? u.name.de : u.name.en; }
 let UC_COMP = null;
@@ -2080,12 +2082,14 @@ function ucBanner(){
   b.innerHTML = `<div class="ucb-head"><span class="ucb-k">${UC_SEL.kindLabel ? (L()?UC_SEL.kindLabel.de:UC_SEL.kindLabel.en) : (L()?"Use Case":"Use case")}</span><b>${ucName(UC_SEL.u)}</b>
       <span class="ucb-nav"><button class="ucb-prev" title="${L()?"Vorheriger Ort":"Previous place"}">◀</button><span class="ucb-pos">${pos}</span><button class="ucb-next" title="${L()?"Nächster Ort":"Next place"}">▶</button></span>
       <a href="${UC_SEL.back || (UC_BOARD + "#uc=" + UC_SEL.slug)}" target="_blank" rel="noopener">${UC_SEL.backLabel ? (L()?UC_SEL.backLabel.de:UC_SEL.backLabel.en) : (L()?"Karte öffnen":"Open card")} ↗</a>
+      <label class="ucb-all"><input type="checkbox" ${UC_SHOWALL?"checked":""}> ${L()?"Alle Standorte zeigen":"Show all sites"}</label>
       <span class="ucb-x" title="${L()?"Schließen":"Close"}">×</span></div>
     <div class="ucb-groups">${groups.map(g => `<div class="ucb-group"><span class="ucb-cc">${siteFlag(g)} ${siteCountry(g)} <i>${g.items.length}</i></span>${g.items.map(i => `<button class="ucb-chip${i===UC_IDX?" on":""}" data-i="${i}">${ps[i].n}</button>`).join("")}</div>`).join("")}</div>`;
   b.querySelector(".ucb-x").onclick = () => {
-    UC_SEL = null; UC_FOCUS = null; UC_IDX = -1; ucBanner(); history.replaceState(null, "", location.pathname);
+    UC_SEL = null; UC_FOCUS = null; UC_IDX = -1; UC_SHOWALL = false; ucBanner(); history.replaceState(null, "", location.pathname);
     document.getElementById("dossier").style.display = "none"; selectedSite = null; render();
   };
+  b.querySelector(".ucb-all input").onchange = e => { UC_SHOWALL = e.target.checked; render(); };
   b.querySelector(".ucb-prev").onclick = () => ucGo(UC_IDX < 0 ? ps.length - 1 : UC_IDX - 1);
   b.querySelector(".ucb-next").onclick = () => ucGo(UC_IDX + 1);
   b.querySelectorAll(".ucb-chip").forEach(el => el.onclick = () => ucGo(+el.dataset.i));
@@ -2811,7 +2815,8 @@ function drawLinks(){
   for (const lk of LIVE_LINKS){
     if (linkCfg.filter && lk.t !== linkCfg.filter) continue;
     const a = lk._a, b = lk._b;
-    if (!LAYERS[a.k].cfg.show && !LAYERS[b.k].cfg.show) continue;
+    if (UC_FOCUS && !UC_SHOWALL){ if (!(UC_FOCUS.has(a.n) && UC_FOCUS.has(b.n))) continue; }
+    else if (!LAYERS[a.k].cfg.show && !LAYERS[b.k].cfg.show) continue;
     const hi = (selectedSite === a || selectedSite === b || hoveredSite === a || hoveredSite === b);
     const interp = d3.geo.interpolate([a.lo,a.la], [b.lo,b.la]);
     const pts = [];
@@ -2844,14 +2849,21 @@ function drawSites(){
   visibleSites = [];
   const z = zoomF();
   const list = [];
+  /* Fokus (Use Case oder Firma): genau die Standorte des Fokus zeigen,
+     unabhängig von Ebenenschaltern, Stufen- und Sektorfilter. */
+  const focusOnly = UC_FOCUS && !UC_SHOWALL;
   for (const key of LAYER_KEYS){
     const lay = LAYERS[key], cfg = lay.cfg;
-    if (!cfg.show) continue;
+    if (!focusOnly && !cfg.show) continue;
     const lim = minLevel(cfg);
     for (const s of lay.arr){
-      if (s.lv < lim) continue;
-      if (cfg.filter && s.t !== cfg.filter) continue;
-      if (eventCfg.only && !recentEvents(s).length) continue;
+      if (focusOnly){
+        if (!UC_FOCUS.has(s.n)) continue;
+      } else {
+        if (s.lv < lim) continue;
+        if (cfg.filter && s.t !== cfg.filter) continue;
+        if (eventCfg.only && !recentEvents(s).length) continue;
+      }
       if (!onFront(s.lo, s.la)) continue;
       const p = projection([s.lo, s.la]);
       if (!p || p[0] < -50 || p[0] > W+50 || p[1] < -50 || p[1] > H+50) continue;
@@ -2912,8 +2924,9 @@ function drawSites(){
     if (it.r > 5) shapeDetail(ctx, meta.sh, it.x, it.y, it.r);
     if ((UC_FOCUS && UC_FOCUS.has(s.n)) || (s.aiu && (s.aiu.ai==="site" || s.aiu.ai==="infra" || (state.aiOnly && s.aiu.ai==="operator")))){
       ctx.beginPath(); ctx.arc(it.x, it.y, it.r*1.55 + 1.5, 0, 7);
-      ctx.lineWidth = s.aiu.ai==="operator" ? 1 : 1.6;
-      if (s.aiu.ai==="operator") ctx.setLineDash([2,2.5]);
+      const aiK = (s.aiu||{}).ai;
+      ctx.lineWidth = aiK==="operator" ? 1 : 1.6;
+      if (aiK==="operator") ctx.setLineDash([2,2.5]);
       ctx.strokeStyle = "rgba(92,255,176,0.9)"; ctx.stroke(); ctx.setLineDash([]);
     }
 
