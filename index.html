@@ -2077,9 +2077,9 @@ function ucBanner(){
     g.items.push(i);
   });
   const pos = UC_IDX >= 0 ? `${UC_IDX+1}/${ps.length}` : `${ps.length}`;
-  b.innerHTML = `<div class="ucb-head"><span class="ucb-k">${L()?"Use Case":"Use case"}</span><b>${ucName(UC_SEL.u)}</b>
+  b.innerHTML = `<div class="ucb-head"><span class="ucb-k">${UC_SEL.kindLabel ? (L()?UC_SEL.kindLabel.de:UC_SEL.kindLabel.en) : (L()?"Use Case":"Use case")}</span><b>${ucName(UC_SEL.u)}</b>
       <span class="ucb-nav"><button class="ucb-prev" title="${L()?"Vorheriger Ort":"Previous place"}">◀</button><span class="ucb-pos">${pos}</span><button class="ucb-next" title="${L()?"Nächster Ort":"Next place"}">▶</button></span>
-      <a href="${UC_BOARD}#uc=${UC_SEL.slug}" target="_blank" rel="noopener">${L()?"Karte öffnen":"Open card"} ↗</a>
+      <a href="${UC_SEL.back || (UC_BOARD + "#uc=" + UC_SEL.slug)}" target="_blank" rel="noopener">${UC_SEL.backLabel ? (L()?UC_SEL.backLabel.de:UC_SEL.backLabel.en) : (L()?"Karte öffnen":"Open card")} ↗</a>
       <span class="ucb-x" title="${L()?"Schließen":"Close"}">×</span></div>
     <div class="ucb-groups">${groups.map(g => `<div class="ucb-group"><span class="ucb-cc">${siteFlag(g)} ${siteCountry(g)} <i>${g.items.length}</i></span>${g.items.map(i => `<button class="ucb-chip${i===UC_IDX?" on":""}" data-i="${i}">${ps[i].n}</button>`).join("")}</div>`).join("")}</div>`;
   b.querySelector(".ucb-x").onclick = () => {
@@ -2126,7 +2126,7 @@ function ucDossier(p){
     <div class="dos-head"><span class="dos-icon" style="background:#5CFFB0"></span>
       <div><div class="dos-name">${p.n}</div><div class="dos-sub">${ucName(UC_SEL.u)}</div></div></div>
     <div class="dos-note">${L()?p.de:p.en} ${src}</div>
-    <a href="${UC_BOARD}#uc=${UC_SEL.slug}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;color:#5CFFB0;font-weight:600;text-decoration:none">→ ${L()?"Zur Use-Case-Karte":"To the use-case card"}</a>`;
+    ${UC_SEL.slug ? `<a href="${UC_BOARD}#uc=${UC_SEL.slug}" target="_blank" rel="noopener" style="display:inline-block;margin-top:8px;color:#5CFFB0;font-weight:600;text-decoration:none">→ ${L()?"Zur Use-Case-Karte":"To the use-case card"}</a>` : ""}`;
   box.style.display = "block";
   document.getElementById("dosClose").onclick = () => { box.style.display = "none"; };
 }
@@ -2137,6 +2137,17 @@ fetch(UC_DEP_URL).then(r => r.ok ? r.json() : null).then(d => {
   for (const slug in UC_ALL){
     const u = UC_ALL[slug];
     for (const p of u.places) if (p.site) (SITE_UC[p.site] = SITE_UC[p.site] || []).push({slug, u});
+  }
+  const comp = UC_PARAMS.get("company");
+  if (comp && UC_COMP && UC_COMP.operators[comp]){
+    const frags = UC_COMP.operators[comp], nm = UC_COMP.names[comp] || comp;
+    const sites = [MINES,PLANTS,DCS,PROC,POWER,HUBS,MEM].flat().filter(x => x.ow && frags.some(f => x.ow.includes(f)));
+    const places = sites.map(x => ({n:x.n, c:x.c, la:x.la, lo:x.lo, en:(x.aiu||{}).en||"", de:(x.aiu||{}).de||"", src:(x.aiu||{}).src||"", yr:(x.aiu||{}).yr||"", site:x}));
+    UC_SEL = {slug: "", kindLabel: {en:"Company", de:"Firma"}, u: {name:{en: nm + " · sites", de: nm + " · Standorte"}}, places,
+              back: UC_COMP.page + "#/" + (L()?"de":"en") + "/" + comp, backLabel: {en:"Market figures", de:"Börsen-Kennzahlen"}};
+    UC_FOCUS = new Set(sites.map(x => x.n));
+    ucBanner();
+    if (places.length) ucFlyTo(places[0]);
   }
   const want = UC_PARAMS.get("uc");
   if (want && UC_ALL[want]){
